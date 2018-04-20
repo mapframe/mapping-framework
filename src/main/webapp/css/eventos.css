@@ -1,0 +1,70 @@
+/* 
+    Created on : Nov 18, 2017, 8:55:45 PM
+    Author     : rhau
+*/
+
+@charset "utf-8";
+
+.btn-nav {
+    margin-top: 10px;
+    margin-left: 5%;
+    margin-right: 5%;
+}
+
+.palestra-btns {
+    margin-top: -5px;
+    margin-right: -5px;
+}
+
+.palestra-btns > button {
+    padding: 5px 10px;
+}
+
+.nav-tabs.nav-justified > li > a {
+    border-bottom: 1px solid #337ab7;
+}
+
+.nav-tabs.nav-justified > .active > a {
+    border: 1px solid #337ab7;
+    border-bottom: none;
+}
+
+.nav-tabs.nav-justified > .active > a:hover {
+    border: 1px solid #337ab7;
+    border-bottom: none;
+}
+
+.nav > li > a:focus, 
+.nav > li > a:hover {
+    background: none;
+}
+
+.list_palestras p {
+    white-space: no-wrap;
+    overflow: hidden;
+    color: #333;
+}
+
+.list_palestras p > label {
+    color: #333;
+    font-weight: 500;
+}
+
+.form-group label {
+    color: #333;
+    font-weight: 500;  
+}
+
+.titulo-destaque {
+    color: #333;
+    font-size: 25px;
+    font-weight: normal;
+    margin: 40px auto 20px auto;
+}
+
+#nova_palestra button {
+    height: 40px;
+    width: 95px;
+    margin-right: 10px;
+    margin-left: 0;
+}
