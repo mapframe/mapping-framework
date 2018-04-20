@@ -16,6 +16,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import banco.AbstractDAO;
 import java.sql.ResultSetMetaData;
+import java.util.Iterator;
 
 /**
  *
@@ -133,39 +134,8 @@ public abstract class RelationalDAO<T extends Document> extends AbstractDAO<T> {
     }
 
     @Override
-    public Collection<T> find(T t) {
-        Connection c = ConexaoMySQL.open();
-        Collection<T> registros = new ArrayList<>();
-        try {
-            PreparedStatement ps = c.prepareStatement(getSqlBusca());
-            fillFind(ps, t);
-            ResultSet rs = ps.executeQuery();
-            registros = fillList(rs);
-            ps.close();
-            c.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(RelationalDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return registros;
-    }
-    
-    @Override
     public T find(String id) {
-        Connection c = ConexaoMySQL.open();
-        T registro = null;
-        try {
-            PreparedStatement ps = c.prepareStatement(getFindSql());
-            ps.setInt(1, Integer.parseInt(id));
-            ResultSet rs = ps.executeQuery();
-            if (rs.next()) 
-                registro = fill(rs);
-            rs.close();
-            ps.close();
-            c.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(RelationalDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return registro;
+        return build_object(id);
     }
     
     @Override
@@ -191,8 +161,10 @@ public abstract class RelationalDAO<T extends Document> extends AbstractDAO<T> {
         org.bson.Document doc = new org.bson.Document();
         Connection c = ConexaoMySQL.open();
         try {
-            PreparedStatement ps = c.prepareStatement(getFindSql());
-            ps.setInt(1, Integer.parseInt(id));
+            String sql = (id == null) ? getFindAllSql() : getFindSql();
+            PreparedStatement ps = c.prepareStatement(sql);
+            if (id != null) 
+                ps.setInt(1, Integer.parseInt(id));
             ResultSet rs = ps.executeQuery();
             ResultSetMetaData metaData = rs.getMetaData();
             Collection<org.bson.Document> documents = new ArrayList<>();
@@ -201,8 +173,10 @@ public abstract class RelationalDAO<T extends Document> extends AbstractDAO<T> {
                 for (int i = 1; i <= metaData.getColumnCount(); i++) 
                    docRow.append(metaData.getColumnName(i), rs.getObject(i));
                 documents.add(docRow);
-            }          
-            doc.append(id, documents);
+            }      
+            String key = (id == null) ? "docs" : id;
+            doc.append(key, documents);
+            docIterator = documents.iterator();
             ps.close();
             rs.close();
             c.close();
@@ -223,5 +197,7 @@ public abstract class RelationalDAO<T extends Document> extends AbstractDAO<T> {
     protected abstract T fill(ResultSet rs) throws SQLException;
 
     protected abstract Collection<T> fillList(ResultSet rs) throws SQLException;
+    
+    public Iterator docIterator;
     
 }

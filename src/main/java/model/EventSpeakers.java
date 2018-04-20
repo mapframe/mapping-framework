@@ -8,7 +8,6 @@ package model;
 import banco.Document;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Date;
 
 /**
  *

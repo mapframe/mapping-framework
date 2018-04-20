@@ -18,6 +18,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import model.EventSpeakers;
 import model.Lecture;
+import model.Speaker;
 import org.bson.Document;
 
 /**
@@ -26,13 +27,18 @@ import org.bson.Document;
  */
 public class EventoDAOMySQL extends RelationalDAO<EventSpeakers> {
 
+    private String lastObjectName;
+    private Document lastDoc;
+    
     public EventoDAOMySQL() {
         setCreateSql("INSERT INTO evento (nome_evento, descricao_evento, endereco, predio, data_inicio, data_fim) VALUES (?, ?, ?, ?, ?, ?)");
         setUpdateSql("UPDATE evento SET nome_evento = ?, descricao_evento = ?, endereco = ?, predio = ?, data_inicio = ?, data_fim = ? WHERE id_evento = ?");
         setDeleteSql("DELETE FROM evento WHERE id_evento = ?");
         setFindSql("SELECT * FROM event NATURAL JOIN lecture NATURAL JOIN speaker where event_id = ?;");
         setFindAllSql("SELECT * FROM event NATURAL JOIN lecture NATURAL JOIN speaker;");
+        //setSqlBusca("SELECT event.id, lecture.*, speaker.* FROM event NATURAL JOIN lecture NATURAL JOIN speaker where event_id = ?;");
         setSqlBusca("SELECT * FROM event NATURAL JOIN lecture NATURAL JOIN speaker where event_id = ?;");
+        lastObjectName = "";
     }
 
     @Override
@@ -53,11 +59,11 @@ public class EventoDAOMySQL extends RelationalDAO<EventSpeakers> {
             Logger.getLogger(RelationalDAO.class.getName()).log(Level.SEVERE, null, ex);
         }        
         // para cada evento salva as suas palestras
-        PalestraDAOMySQL pdao = new PalestraDAOMySQL();
+       /* PalestraDAOMySQL pdao = new PalestraDAOMySQL();
         for (Lecture p : e.getLectures()) {
             p.setEvent(e);
             pdao.create(p);
-        }
+        } */
         return 1; // sucess
     }
     
@@ -121,18 +127,49 @@ public class EventoDAOMySQL extends RelationalDAO<EventSpeakers> {
     protected Collection<EventSpeakers> fillList(ResultSet rs) throws SQLException {
         Collection<EventSpeakers> eventos = new ArrayList<>();
         while (rs.next())
-            eventos.add(fill(rs) );
+            eventos.add( fill(rs) );
         return eventos;
     }
 
     @Override
     protected Boolean has_next(Document doc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+        if ( docIterator.hasNext() )
+            return true;
+        if ( lastObjectName.equals("eventSpeakers") )
+            return lastDoc.containsKey("lecture_id");
+        if ( lastObjectName.equals("lecture") )
+            return lastDoc.containsKey("speaker_id");
+        return false;
     }
 
     @Override
-    protected EventSpeakers next(Document doc) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    protected Object next(Document doc) {
+        Object obj = null;
+        if ( lastObjectName.isEmpty() ) {
+            lastDoc = (Document) docIterator.next();
+            EventSpeakers es = new EventSpeakers();
+            es.setId(Integer.toString((Integer) lastDoc.get("event_id")));
+            es.setName((String) lastDoc.get("event_name"));
+            obj = es;
+            lastObjectName = "eventSpeakers";
+        }
+        else if ( lastObjectName.toLowerCase().contains("speaker") ) {
+            Lecture l = new Lecture();
+            l.setId((Integer) lastDoc.get("lecture_id"));
+            l.setTitle((String) lastDoc.get("lecture_title"));
+            obj = l;
+            lastObjectName = "lecture";
+        }
+        else if ( lastObjectName.equals("lecture") ) {
+            Speaker sp = new Speaker();
+            sp.setId((Integer) lastDoc.get("lecture_id"));
+            sp.setName((String) lastDoc.get("speaker_name"));
+            sp.setCity((String) lastDoc.get("speaker_city"));
+            obj = sp;
+            lastDoc = (Document) docIterator.next();
+            lastObjectName = "speaker";
+        }
+        return obj;
     }
-
+    
 }

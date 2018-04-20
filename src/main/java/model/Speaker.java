@@ -16,7 +16,7 @@ public class Speaker extends Document {
     private Integer id;
     private String name;
     private String city;
-    private Lecture lecture;
+    private Lecture parent_object;
 
     public Speaker() {
         
@@ -29,14 +29,14 @@ public class Speaker extends Document {
     public Speaker(String name, String city, Lecture lecture) {
         this.name = name;
         this.city = city;
-        this.lecture = lecture;
+        this.parent_object = lecture;
     }
 
     public Speaker(Integer id, String name, String city, Lecture lecture) {
         this.id = id;
         this.name = name;
         this.city = city;
-        this.lecture = lecture;
+        this.parent_object = lecture;
     }
 
     /**
@@ -85,19 +85,19 @@ public class Speaker extends Document {
      * @return the lecture
      */
     public Lecture getLecture() {
-        return lecture;
+        return parent_object;
     }
 
     /**
      * @param lecture the lecture to set
      */
     public void setLecture(Lecture lecture) {
-        this.lecture = lecture;
+        this.parent_object = lecture;
     }
 
     @Override
     public String toString() {
-        return "Speaker{" + "id=" + id + ", name=" + name + ", city=" + city + ", lecture=" + lecture + '}';
+        return "Speaker{" + "id=" + id + ", name=" + name + ", city=" + city + '}';
     }
     
 }

@@ -17,7 +17,7 @@ public class Lecture extends Document {
     private Integer id;
     private String title;
     private Speaker speaker;
-    private EventSpeakers event; // referencia para criar obj mysql
+    private EventSpeakers parent_object; // referencia para criar obj mysql
 
     public Lecture() {
 
@@ -30,14 +30,14 @@ public class Lecture extends Document {
     public Lecture(String title, Speaker speaker, EventSpeakers event) {
         this.title = title;
         this.speaker = speaker;
-        this.event = event;
+        this.parent_object = event;
     }
 
     public Lecture(Integer id, String title, Speaker speaker, EventSpeakers event) {
         this.id = id;
         this.title = title;
         this.speaker = speaker;
-        this.event = event;
+        this.parent_object = event;
     }
 
     /**
@@ -86,19 +86,19 @@ public class Lecture extends Document {
      * @return the event
      */
     public EventSpeakers getEvent() {
-        return event;
+        return parent_object;
     }
 
     /**
      * @param event the event to set
      */
     public void setEvent(EventSpeakers event) {
-        this.event = event;
+        this.parent_object = event;
     }
 
     @Override
     public String toString() {
-        return "Lecture{" + "id=" + id + ", title=" + title + ", speaker=" + speaker + ", event=" + event + '}';
+        return "Lecture{" + "id=" + id + ", title=" + title + ", speaker=" + speaker + '}';
     }
 
 }
