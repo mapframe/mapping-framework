@@ -12,6 +12,7 @@ import org.bson.Document;
 import org.bson.types.ObjectId;
 import banco.AbstractDAO;
 import java.util.ArrayList;
+import java.util.Iterator;
 
 /**
  *
@@ -25,50 +26,65 @@ public abstract class DocumentOrientedDAO<T extends banco.Document> extends Abst
     public DocumentOrientedDAO() {
         this.collection = ConexaoMongoSingleton.getInstancia().getMongoCollection();
     }
-
+    
     public Integer create(T t) {
-        Document doc = prepararDocumento(t);
-        collection.insertOne(doc);
+      //  Document doc = prepararDocumento(t);
         return 1; // success
     }
-
+    
+    @Override
     public void update(T t) {
         Document doc = prepararDocumento(t);
         String documentId = getDocumentId(t);
         collection.updateOne(eq( "_id", new ObjectId(documentId)), new Document("$set", doc));
     }
-
+    
+    @Override
     public void delete(T t) {
         String documentId = getDocumentId(t);
         collection.deleteOne( eq("_id",  new ObjectId(documentId)) );       
     }
-
-    public Collection<T> find(T t) {
-        Collection<T> registros = new ArrayList<>();
-        String documentId = getDocumentId(t);
-        for (Document cur : collection.find( eq("_id", new ObjectId(documentId))) )
-            registros.add( prepararRegistro(cur) );
-        return registros;
-    }
-
+    
+    @Override
     public T find(String id) {
-        T registro = null;
-        for (Document cur : collection.find( eq("_id", new ObjectId(id)) ))
-            registro = prepararRegistro(cur);
-        return registro;
+        return build_object(id);
     }
 
+    @Override
     public Collection<T> findAll() {
-        Collection<T> registros = new ArrayList<>();
-        for (Document cur : collection.find())
-            registros.add( prepararRegistro(cur) );
-        return registros;
+        return build_objects();
     }
 
+    @Override
+    protected org.bson.Document reset_doc(String id) {
+        Collection<Document> documents = new ArrayList<>();
+        if (id == null) {
+            for (Document cur : collection.find()) 
+                documents.add(cur);
+        } else {
+            for (Document cur : collection.find( eq("_id", new ObjectId(id)) ))
+                documents.add(cur);
+        }      
+        init_parser_vars(documents);
+        return new Document("docs", documents);
+    }
+    
     protected abstract String getDocumentId(T t);
     
     protected abstract Document prepararDocumento(T t);
 
     protected abstract T prepararRegistro(Document doc);
+    
+    protected Iterator docIterator;
+    protected Iterator lastSubDoc;
+    protected String lastObjectName;
+    protected org.bson.Document lastDoc;
+    
+    private void init_parser_vars(Collection<org.bson.Document> documents) {
+        docIterator = documents.iterator();
+        lastSubDoc = null;
+        lastObjectName = "";
+        lastDoc = null;
+    }
     
 }

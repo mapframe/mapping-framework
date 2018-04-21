@@ -25,9 +25,9 @@ import org.bson.Document;
  *
  * @author isabella
  */
-public class EventoDAOMySQL extends RelationalDAO<EventSpeakers> {
+public class EventSpeakersDAOMySQL extends RelationalDAO<EventSpeakers> {
 
-    public EventoDAOMySQL() {
+    public EventSpeakersDAOMySQL() {
         setCreateSql("INSERT INTO evento (nome_evento, descricao_evento, endereco, predio, data_inicio, data_fim) VALUES (?, ?, ?, ?, ?, ?)");
         setUpdateSql("UPDATE evento SET nome_evento = ?, descricao_evento = ?, endereco = ?, predio = ?, data_inicio = ?, data_fim = ? WHERE id_evento = ?");
         setDeleteSql("DELETE FROM evento WHERE id_evento = ?;");
@@ -63,12 +63,12 @@ public class EventoDAOMySQL extends RelationalDAO<EventSpeakers> {
     
     @Override
     public void update(EventSpeakers e) {
-        EventSpeakers antigo = new EventoDAOMySQL().find(e.getId());
+        EventSpeakers antigo = new EventSpeakersDAOMySQL().find(e.getId());
         EventoMySQLComparador comparador = new EventoMySQLComparador();
         if (  comparador.comparaEventos(antigo, e) ) {
             Connection c = ConexaoMySQL.open();
             try {
-                PreparedStatement ps = c.prepareStatement(getSqlBusca());
+                PreparedStatement ps = c.prepareStatement(getFindSql());
                 fillUpdate(ps, e);
                 ps.execute();
                 ps.close();

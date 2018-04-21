@@ -63,14 +63,6 @@ public abstract class RelationalDAO<T extends Document> extends AbstractDAO<T> {
         this.findSql = findSql;
     }
 
-    public String getSqlBusca() {
-        return sqlBusca;
-    }
-
-    public void setSqlBusca(String sqlBusca) {
-        this.sqlBusca = sqlBusca;
-    }
-
     public String getFindAllSql() {
         return findAllSql;
     }
@@ -162,7 +154,7 @@ public abstract class RelationalDAO<T extends Document> extends AbstractDAO<T> {
             }      
             String key = (id == null) ? "docs" : id;
             doc.append(key, documents);
-            start_conversion_vars(documents);
+            init_parser_vars(documents);
             ps.close();
             rs.close();
             c.close();
@@ -187,16 +179,15 @@ public abstract class RelationalDAO<T extends Document> extends AbstractDAO<T> {
     protected Iterator docIterator;
     protected String lastObjectName;
     protected String lastRootId;
-    protected org.bson.Document lastDoc;
     protected Boolean hasNextDoc;
+    protected org.bson.Document lastDoc;
 
-    private void start_conversion_vars(Collection<org.bson.Document> documents) {
+    private void init_parser_vars(Collection<org.bson.Document> documents) {
         docIterator = documents.iterator();
         lastObjectName = "";
         lastRootId = "";
-        lastDoc = null;
         hasNextDoc = false;
+        lastDoc = null;
     }
     
-   
 }
