@@ -5,21 +5,15 @@
  */
 package banco;
 
-import java.lang.reflect.Array;
 import java.lang.reflect.Field;
-import java.lang.reflect.Method;
 import java.lang.reflect.ParameterizedType;
-import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
-import java.util.Objects;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import model.Lecture;
+import model.EventSpeakers;
 import model.dao.relacional.mysql.EventoDAOMySQL;
 
 /**
@@ -45,8 +39,6 @@ public abstract class AbstractDAO<T extends Document> {
     
     protected abstract Object next(org.bson.Document doc);
     
-    protected abstract Boolean has_root(org.bson.Document doc);
-    
     protected T build_object(String id) {
         org.bson.Document doc = reset_doc(id);
         T root_object = null;
@@ -67,32 +59,28 @@ public abstract class AbstractDAO<T extends Document> {
     
     protected Collection<T> build_objects() {
         org.bson.Document doc = reset_doc(null); // all documents
-        Collection<T> root_objects = new ArrayList<>();
-        while ( has_root(doc) ) {
-            T root_object = null;
-            Map<Class, Object> map = new HashMap<>();
-            if ( has_next(doc) ) {
-                root_object = (T) next(doc);
-                map.put(root_object.getClass(), root_object);
-            } 
-            while ( has_next(doc) ) {
-                Object obj = next(doc);
+        Collection<T> root_objects = new ArrayList<>();      
+        T root_object = null;
+        Map<Class, Object> map = new HashMap<>();
+        if ( has_next(doc) ) {
+            root_object = (T) next(doc);
+            map.put(root_object.getClass(), root_object);
+            root_objects.add(root_object);
+        } 
+        while ( has_next(doc) ) {
+            Object obj = next(doc);
+            if ( obj.getClass().equals(root_object.getClass()) ) { // another root
+                root_object = (T) obj;
+                root_objects.add(root_object);
+            } else {
                 Class parent_class = p_class(obj.getClass());
                 Object parent_object = map.get(parent_class);
                 addChild(parent_object, obj);
-                map.put(obj.getClass(), obj);  
-            } 
-            root_objects.add(root_object);
-        }
+            }
+            map.put(obj.getClass(), obj); 
+        } 
+            
         return root_objects;
-    }
-    
-    public static void main(String[] args) {
-        EventoDAOMySQL edao = new EventoDAOMySQL();
-        edao.build_object("1");
-       //Lecture l = new Lecture();
-       //p_class(l.getClass());
-       
     }
 
     private static Class p_class(Class<?> c) {

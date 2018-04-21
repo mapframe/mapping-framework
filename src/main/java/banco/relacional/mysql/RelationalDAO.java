@@ -29,7 +29,6 @@ public abstract class RelationalDAO<T extends Document> extends AbstractDAO<T> {
     private String updateSql;
     private String deleteSql;
     private String findSql;
-    private String sqlBusca; // personalizada em cada DAO
     private String findAllSql;
 
     public String getCreateSql() {
@@ -140,20 +139,7 @@ public abstract class RelationalDAO<T extends Document> extends AbstractDAO<T> {
     
     @Override
     public Collection<T> findAll() {
-        Connection c = ConexaoMySQL.open();
-        Collection<T> registros = null;
-        try {
-            PreparedStatement ps = c.prepareStatement(getFindAllSql());
-            ResultSet rs = ps.executeQuery();
-            registros = fillList(rs);
-            ps.close();
-            rs.close();
-            c.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(RelationalDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-
-        return registros;
+        return build_objects();
     }
 
     @Override
@@ -176,7 +162,7 @@ public abstract class RelationalDAO<T extends Document> extends AbstractDAO<T> {
             }      
             String key = (id == null) ? "docs" : id;
             doc.append(key, documents);
-            docIterator = documents.iterator();
+            start_conversion_vars(documents);
             ps.close();
             rs.close();
             c.close();
@@ -198,6 +184,19 @@ public abstract class RelationalDAO<T extends Document> extends AbstractDAO<T> {
 
     protected abstract Collection<T> fillList(ResultSet rs) throws SQLException;
     
-    public Iterator docIterator;
+    protected Iterator docIterator;
+    protected String lastObjectName;
+    protected String lastRootId;
+    protected org.bson.Document lastDoc;
+    protected Boolean hasNextDoc;
+
+    private void start_conversion_vars(Collection<org.bson.Document> documents) {
+        docIterator = documents.iterator();
+        lastObjectName = "";
+        lastRootId = "";
+        lastDoc = null;
+        hasNextDoc = false;
+    }
     
+   
 }

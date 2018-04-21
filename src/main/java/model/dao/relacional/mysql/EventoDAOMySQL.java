@@ -27,18 +27,12 @@ import org.bson.Document;
  */
 public class EventoDAOMySQL extends RelationalDAO<EventSpeakers> {
 
-    private String lastObjectName;
-    private Document lastDoc;
-    
     public EventoDAOMySQL() {
         setCreateSql("INSERT INTO evento (nome_evento, descricao_evento, endereco, predio, data_inicio, data_fim) VALUES (?, ?, ?, ?, ?, ?)");
         setUpdateSql("UPDATE evento SET nome_evento = ?, descricao_evento = ?, endereco = ?, predio = ?, data_inicio = ?, data_fim = ? WHERE id_evento = ?");
-        setDeleteSql("DELETE FROM evento WHERE id_evento = ?");
+        setDeleteSql("DELETE FROM evento WHERE id_evento = ?;");
         setFindSql("SELECT * FROM event NATURAL JOIN lecture NATURAL JOIN speaker where event_id = ?;");
         setFindAllSql("SELECT * FROM event NATURAL JOIN lecture NATURAL JOIN speaker;");
-        //setSqlBusca("SELECT event.id, lecture.*, speaker.* FROM event NATURAL JOIN lecture NATURAL JOIN speaker where event_id = ?;");
-        setSqlBusca("SELECT * FROM event NATURAL JOIN lecture NATURAL JOIN speaker where event_id = ?;");
-        lastObjectName = "";
     }
 
     @Override
@@ -133,40 +127,43 @@ public class EventoDAOMySQL extends RelationalDAO<EventSpeakers> {
 
     @Override
     protected Boolean has_next(Document doc) {
-        if ( docIterator.hasNext() )
-            return true;
-        if ( lastObjectName.equals("eventSpeakers") )
-            return lastDoc.containsKey("lecture_id");
-        if ( lastObjectName.equals("lecture") )
-            return lastDoc.containsKey("speaker_id");
-        return false;
+        return docIterator.hasNext() || hasNextDoc;
     }
 
     @Override
     protected Object next(Document doc) {
         Object obj = null;
+        if ( !lastRootId.isEmpty() && !lastRootId.equals(Integer.toString((Integer) lastDoc.get("event_id"))) ) 
+            lastObjectName = "";
+        
         if ( lastObjectName.isEmpty() ) {
-            lastDoc = (Document) docIterator.next();
+            if (lastDoc == null) 
+                lastDoc = (Document) docIterator.next();
             EventSpeakers es = new EventSpeakers();
             es.setId(Integer.toString((Integer) lastDoc.get("event_id")));
             es.setName((String) lastDoc.get("event_name"));
             obj = es;
             lastObjectName = "eventSpeakers";
+            lastRootId = es.getId();
         }
-        else if ( lastObjectName.toLowerCase().contains("speaker") ) {
+        else if ( lastObjectName.toLowerCase().contains("speaker") ) { 
             Lecture l = new Lecture();
             l.setId((Integer) lastDoc.get("lecture_id"));
             l.setTitle((String) lastDoc.get("lecture_title"));
             obj = l;
             lastObjectName = "lecture";
         }
-        else if ( lastObjectName.equals("lecture") ) {
+        else if ( lastObjectName.equals("lecture") ) { 
             Speaker sp = new Speaker();
             sp.setId((Integer) lastDoc.get("lecture_id"));
             sp.setName((String) lastDoc.get("speaker_name"));
             sp.setCity((String) lastDoc.get("speaker_city"));
             obj = sp;
-            lastDoc = (Document) docIterator.next();
+            if ( docIterator.hasNext() ) {
+                lastDoc = (Document) docIterator.next();
+                hasNextDoc = true;
+            } else 
+                hasNextDoc = false;
             lastObjectName = "speaker";
         }
         return obj;
