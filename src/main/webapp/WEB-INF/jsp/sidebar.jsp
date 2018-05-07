@@ -3,9 +3,9 @@
 <nav id="sidebar">
     <div class="sidebar-header">
         <a href="index.jsp">
-            <img src="img/brasao-logo-ufsm.png" class="img-logo" alt="UFSM" />
+            <img src="img/brasao-logo-XXX.png" class="img-logo" alt="UFSM" />
             <h3>EVENTOS</h3>
-            <strong>UFSM</strong>
+            <strong>XXX</strong>
         </a>
     </div>
     <ul class="list-unstyled components">
@@ -27,20 +27,20 @@
     </ul>
     <ul class="list-unstyled CTAs" >
         <li>
-            <a href="https://github.com/isasakis" class="article" title="GitHub @isasakis" target="_blank">
+            <a href="https://github.com/XXX" class="article" title="GitHub @XXX" target="_blank">
                 <div class="text-center">
                     <span class="fa-stack fa-lg">
                         <i class="fa fa-github fa-stack-2x fa-icon"></i>
-                    </span> @isasakis
+                    </span> @XXX
                 </div>
             </a>
         </li>
         <li>
-            <a href="https://github.com/rwfazul" class="article" title="GitHub @rwfazul" target="_blank">
+            <a href="https://github.com/XXX" class="article" title="GitHub @XXX" target="_blank">
                 <div class="text-center">                    
                     <span class="fa-stack fa-lg">
                         <i class="fa fa-github fa-stack-2x fa-icon"></i>
-                    </span> @rwfazul
+                    </span> @XXX
                 </div>
             </a>
         </li>

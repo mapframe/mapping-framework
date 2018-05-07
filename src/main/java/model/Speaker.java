@@ -5,7 +5,7 @@
  */
 package model;
 
-import banco.Document;
+import database.Document;
 
 /**
  *
