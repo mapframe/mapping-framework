@@ -1,8 +1,6 @@
-# mapping-framework
+# A Mapping Framework for applications designed to handle documents
 
-## Table of contents
-
-- [Introduction](#introduction)
+- [What is it?](#introduction)
 - [Getting started](#getting-started)
 	- [Model creation](#model-creation)
     - [Example](#example-model)
@@ -11,9 +9,10 @@
 	- [Mapping creation](#mapping-creation)
     - [Example](#example-mapping)
 
-## Introduction
+<a name="introduction"></a>
+## What is it?
 
-This framework is designed to allow support both to relational and document oriented databases for applications designed to handle documents. By building it in the shape of an integration system, we manage to provide to applications seamless read and write access to databases that are able to store documents.
+This is a framework designed to allow support both to relational and document oriented databases for applications designed to handle documents. By building it in the shape of an integration system, we manage to provide to applications seamless read and write access to databases that are able to store documents.
 
 Following the specificed steps we will show next in the usage example section, applications that manipulate complex data will not be tightly coupled with D.O. databases (the general choose of document-oriented aplications) instead, the transition from one storage technology to another (e.g. from D.O. databases to databases based on the relational model of data) could be accomplished without maintenance effort in the application/model layers.
 
@@ -40,6 +39,62 @@ Note that there must be a single root class of your schema. So, be careful and m
 <a name="example-model"></a>
 + Example
 
+Regard a simple context of a blog with Users, Posts, Tags, and Comments, we could create the following classes:
+
+``` java
+	public class User extends Document {
+		
+		private int id; // necessary to SGBDRs
+		private String name;
+		private String email;
+		
+		/* constructors, getters and setters, ... */
+		
+	}
+```
+
+``` java
+	public class Comment extends Document {
+		
+		private int id; // necessary to SGBDRs
+		private String content;
+		private Date createdDate;
+		private User creator;
+		
+		/* constructors, getters and setters, ... */
+		
+	}
+```
+
+``` java
+	public class Tag extends Document {
+		
+		private String id; // necessary to SGBDRs
+		private String name;
+		private String description;
+		
+		/* constructors, getters and setters, ... */
+		
+	}
+```
+
+``` java
+	public class Post extends Document {
+		
+		private String id; // necessary both to D.O. databases and SGBDRs
+		private String title;
+		private String content;
+		private Date createdDate;
+		private Collection<Tag> tags;
+		private Collection<Comment> comments;
+		
+		/* constructors, getters and setters, ... */
+		
+	}
+```
+
+This is an example schema that meets the conditions required by the framework: every class extends 'Document' and there a single root object from which all information can be accessed (Post). 
+
 #### Database Creation
 
 create the relational database that corre-
@@ -57,3 +112,8 @@ alDAO’ or ‘DocumentOrientedDAO’.
 
 <a name="example-mapping"></a>
 + Example
+
+
+## License
+
+This framework is open-sourced software licensed under the MIT license.
