@@ -106,7 +106,7 @@ In the relational database it is important to ensure that only the root table wi
 Below you can see a Entity-Relationship Diagram of the model previously showed (Post).
 
 <p align="center">
-<img src="example-er.png" width="80%" />
+<img src="example-er.png" width="40%" />
 </p>
 
 This example database schema meets the conditions required by the framework: from the table Post you can access all the other tables that structure the document.
