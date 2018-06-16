@@ -40,7 +40,7 @@ Note that there must be a single root class of your schema. So, be careful and m
 <a name="example-model"></a>
 + Example
 
-Regard a simple context of a blog with Users, Posts, Tags, and Comments, we could create the following classes:
+Taking as an example a simple context of a blog with Users, Posts, Tags, and Comments, we could create the following classes:
 
 ``` java
 	public class User extends Document {
