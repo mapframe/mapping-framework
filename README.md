@@ -8,6 +8,7 @@
     - [Example](#example-database)
 	- [Mapping creation](#mapping-creation)
     - [Example](#example-mapping)
+- [License](#license)
 
 <a name="introduction"></a>
 ## What is it?
@@ -129,4 +130,4 @@ Lastly, the mplementation of 'next', 'process', and 'has_next' methods in a root
 
 ## License
 
-This framework is open-sourced software licensed under the MIT license.
+This framework is open-sourced software licensed under the [MIT license](LICENSE).
