@@ -14,8 +14,26 @@ First of all, it is important to know the basic architecture of this mapping fra
 
 Above the dotted line we isolate the generic behavior of the persistence logic to store and to manipulate documents-based schema (representing the model layer). In this context, the AbstractDAO class acts like an interface, providing the signatures of the CRUD operations accessible by the application layer. The another DAOs classes are responsible to establish the communication with the databases, using the resources of each specific  API (in this example we have used MySQL and MongoDB connectors).
 
-Last but no least, below the dotted line, we have the DAO classes which are context-dependent of the schema to be mapped. That are the classes that need to be encoded by you, developer, to be consistent with the model layer.
+Last but no least, below the dotted line, we have the DAO classes which are context-dependent of the schema to be mapped. That are the classes that need to be encoded by you, developer, to be consistent with the model layer. Next. we will show a simple example of how this could be done.
 
-### Usage example
+### Usage
 
+#### Model Creation
 
+In the [model layer](src/main/java/model), create a hierarchy of classes to represent the schema you want to persist. The classes need to extend '[Document](src/main/java/database/Document.java)'. This inheritance, ensures that only objects that are subtypes of 'Document' can be handled by the framework. This restriction allows type inferences to be effectively and seamlessly controlled.
+
+Note that there must be a single root class of your schema. So, be careful and make sure that all your classes are properly structured.
+
++ Example
+
+#### Database Creation
+
+create the relational database that corre-
+sponds to the structure of the document type to be supported.
+As for the MongoDB, no actions are required, since docu-
+ments are schema-less.
+
+#### Mapping Creation
+in the persistence layer, create one con-
+crete DAO class per class model, making it extend ‘Relation-
+alDAO’ or ‘DocumentOrientedDAO’.
