@@ -92,7 +92,7 @@ Regard a simple context of a blog with Users, Posts, Tags, and Comments, we coul
 	}
 ```
 
-This example schema meets the conditions required by the framework: every class extends 'Document' and there a single root object from which all information can be accessed (Post). 
+This example schema meets the conditions required by the framework: every class extends 'Document' and there a single root object from which all information can be accessed ('Post'). 
 
 #### Database Creation
 
@@ -103,21 +103,28 @@ In the relational database it is important to ensure that only the root table wi
 <a name="example-database"></a>
 + Example
 
-Below you can see a Entity-Relationship Diagram of the model previously showed (Post).
+Below you can see a Entity-Relationship Diagram of the model previously showed.
 
 <p align="center">
-<img src="example-er.png" width="40%" />
+<img src="example-er.png" width="60%" />
 </p>
 
-This example database schema meets the conditions required by the framework: from the table Post you can access all the other tables that structure the document.
+This example database schema meets the conditions required by the framework: from the table 'Post' you can access all the other tables that structure the document.
 
 #### Mapping Creation
-in the persistence layer, create one con-
-crete DAO class per class model, making it extend ‘Relation-
-alDAO’ or ‘DocumentOrientedDAO’.
+
+In the [persistence layer](src/main/java/model/dao), create one concrete DAO class per class model, making it extend '[RelationalDAO](src/main/java/database/relational/RelationalDAO.java)' or '[DocumentOrientedDAO](src/main/java/database/docoriented/DocumentOrientedDAO.java)'.
+
+After that, it is necessary override the 'next()' and 'process()' methods in each DAO class, and in case of the DAO of the root class it is also necessary to override the method 'has_next()'.
+
+The next() method should move the cursor to the next object of the given document, 'process(obj)' sjould transform a specific object into a part of the document, and 'has_next()' should return true if the given document contains another object to be read, which means that its cursor can iterate further to return more objects. 
 
 <a name="example-mapping"></a>
 + Example
+
+The mplementation of 'next' and 'process' methods in a sub-class class could be seen, as a basis example, in [relational](src/main/java/model/dao/relational/mysql/SpeakerRelationalDAO.java) and [document oriented](src/main/java/model/dao/docoriented/mongodb/SpeakerDocOrientedDAO.java).
+
+Lastly, the mplementation of 'next', 'process', and 'has_next' methods in a root class could be seen, as a basis example, in [relational](src/main/java/model/dao/relational/mysql/EventSpeakersRelationalDAO.java) and [document oriented](src/main/java/model/dao/docoriented/mongodb/EventSpeakersDocOrientedDAO.java).
 
 
 ## License
