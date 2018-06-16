@@ -3,11 +3,11 @@
 - [What is it?](#introduction)
 - [Getting started](#getting-started)
 	- [Model creation](#model-creation)
-    - [Example](#example-model)
+    		+ [Example](#example-model)
 	- [Database creation](#database-creation)
-    - [Example](#example-database)
+    		+ [Example](#example-database)
 	- [Mapping creation](#mapping-creation)
-    - [Example](#example-mapping)
+    		+ [Example](#example-mapping)
 - [License](#license)
 
 <a name="introduction"></a>
