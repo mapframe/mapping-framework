@@ -1,5 +1,18 @@
 # mapping-framework
 
+## Table of contents
+
+- [Introduction](#introduction)
+- [Getting started](#getting-started)
+	- [Model creation](#model-creation)
+    - [Example](#example-model)
+	- [Database creation](#database-creation)
+    - [Example](#example-database)
+	- [Mapping creation](#mapping-creation)
+    - [Example](#example-mapping)
+
+## Introduction
+
 This framework is designed to allow support both to relational and document oriented databases for applications designed to handle documents. By building it in the shape of an integration system, we manage to provide to applications seamless read and write access to databases that are able to store documents.
 
 Following the specificed steps we will show next in the usage example section, applications that manipulate complex data will not be tightly coupled with D.O. databases (the general choose of document-oriented aplications) instead, the transition from one storage technology to another (e.g. from D.O. databases to databases based on the relational model of data) could be accomplished without maintenance effort in the application/model layers.
@@ -24,6 +37,7 @@ In the [model layer](src/main/java/model), create a hierarchy of classes to repr
 
 Note that there must be a single root class of your schema. So, be careful and make sure that all your classes are properly structured.
 
+<a name="example-model"></a>
 + Example
 
 #### Database Creation
@@ -33,7 +47,13 @@ sponds to the structure of the document type to be supported.
 As for the MongoDB, no actions are required, since docu-
 ments are schema-less.
 
+<a name="example-database"></a>
++ Example
+
 #### Mapping Creation
 in the persistence layer, create one con-
 crete DAO class per class model, making it extend ‘Relation-
 alDAO’ or ‘DocumentOrientedDAO’.
+
+<a name="example-mapping"></a>
++ Example
