@@ -116,16 +116,16 @@ This example database schema meets the conditions required by the framework: fro
 
 In the [persistence layer](src/main/java/model/dao), create one concrete DAO class per class model, making it extend '[RelationalDAO](src/main/java/database/relational/RelationalDAO.java)' or '[DocumentOrientedDAO](src/main/java/database/docoriented/DocumentOrientedDAO.java)'.
 
-After that, it is necessary override the 'next()' and 'process()' methods in each DAO class, and in case of the DAO of the root class it is also necessary to override the method 'has_next()'.
+After that, it is necessary override the 'next()' and 'process()' methods in each DAO class, and in case of the DAO of the root class, it is also necessary to override the method 'has_next()'.
 
-The next() method should move the cursor to the next object of the given document, 'process(obj)' sjould transform a specific object into a part of the document, and 'has_next()' should return true if the given document contains another object to be read, which means that its cursor can iterate further to return more objects. 
+The next() method should move the cursor to the next object of the given document, 'process(obj)' should transform a specific object into a part of the document, and 'has_next()' should return true if the given document contains another object to be read, which means that its cursor can iterate further to return more objects. 
 
 <a name="example-mapping"></a>
 + Example
 
-The mplementation of 'next' and 'process' methods in a sub-class class could be seen, as a basis example, in [relational](src/main/java/model/dao/relational/mysql/SpeakerRelationalDAO.java) and [document oriented](src/main/java/model/dao/docoriented/mongodb/SpeakerDocOrientedDAO.java).
+The implementation of 'next' and 'process' methods in a sub-class class could be seen, as a basis example, in [relational](src/main/java/model/dao/relational/mysql/SpeakerRelationalDAO.java) and [document oriented](src/main/java/model/dao/docoriented/mongodb/SpeakerDocOrientedDAO.java).
 
-Lastly, the mplementation of 'next', 'process', and 'has_next' methods in a root class could be seen, as a basis example, in [relational](src/main/java/model/dao/relational/mysql/EventSpeakersRelationalDAO.java) and [document oriented](src/main/java/model/dao/docoriented/mongodb/EventSpeakersDocOrientedDAO.java).
+Lastly, the implementation of 'next', 'process', and 'has_next' methods in a root class could be seen, as a basis example, in [relational](src/main/java/model/dao/relational/mysql/EventSpeakersRelationalDAO.java) and [document oriented](src/main/java/model/dao/docoriented/mongodb/EventSpeakersDocOrientedDAO.java).
 
 
 ## License
