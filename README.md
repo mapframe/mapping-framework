@@ -8,7 +8,9 @@ Following the specificed steps we will show next in the usage example section, a
 
 First of all, it is important to know the basic architecture of this mapping framework. We developed its code in Java and it is essentially divided in two layers: model and persistence (see the figure below).
 
-<img src="framework-architecture.png" width="80%" align="center" />
+<p align="center">
+<img src="framework-architecture.png" width="80%" />
+</p>
 
 Above the dotted line we isolate the generic behavior of the persistence logic to store and to manipulate documents-based schema (representing the model layer). In this context, the AbstractDAO class acts like an interface, providing the signatures of the CRUD operations accessible by the application layer. The another DAOs classes are responsible to establish the communication with the databases, using the resources of each specific  API (in this example we have used MySQL and MongoDB connectors).
 
