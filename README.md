@@ -71,7 +71,6 @@ Regard a simple context of a blog with Users, Posts, Tags, and Comments, we coul
 		
 		private String id; // necessary to SGBDRs
 		private String name;
-		private String description;
 		
 		/* constructors, getters and setters, ... */
 		
@@ -93,17 +92,24 @@ Regard a simple context of a blog with Users, Posts, Tags, and Comments, we coul
 	}
 ```
 
-This is an example schema that meets the conditions required by the framework: every class extends 'Document' and there a single root object from which all information can be accessed (Post). 
+This example schema meets the conditions required by the framework: every class extends 'Document' and there a single root object from which all information can be accessed (Post). 
 
 #### Database Creation
 
-create the relational database that corre-
-sponds to the structure of the document type to be supported.
-As for the MongoDB, no actions are required, since docu-
-ments are schema-less.
+Create the relational database that corresponds to the structure of the document type to be supported. As for the D.O. databases like MongoDB, no actions are required, since documents are schemaless.
+
+In the relational database it is important to ensure that only the root table will not be referenced by foreign key. From this table, a record that forms the highest level of an document can be obtained. Additionally, all tables have a single foreign key, which assures a tree formation.
 
 <a name="example-database"></a>
 + Example
+
+Below you can see a Entity-Relationship Diagram of the model previously showed (Post).
+
+<p align="center">
+<img src="example-er.png" width="80%" />
+</p>
+
+This example database schema meets the conditions required by the framework: from the table Post you can access all the other tables that structure the document.
 
 #### Mapping Creation
 in the persistence layer, create one con-
