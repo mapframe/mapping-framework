@@ -7,16 +7,17 @@ package database;
 
 import java.lang.reflect.Field;
 import java.lang.reflect.ParameterizedType;
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  *
- * @author isabella
  * @param <T>
  */
 public abstract class AbstractDAO<T extends Document> {
@@ -82,11 +83,6 @@ public abstract class AbstractDAO<T extends Document> {
             
         return root_objects;
     }
-
-    public org.bson.Document build_doc(T t) {
-        /* here  */
-        return null;
-    }
     
     private Class p_class(Class<?> c) {
         Class parent = null;
@@ -136,6 +132,58 @@ public abstract class AbstractDAO<T extends Document> {
             }                
             f.setAccessible(accessible);
         }
+    }
+    
+    protected org.bson.Document build_doc(T obj) {
+        org.bson.Document doc = new org.bson.Document();
+        if (obj != null) {
+            doc = process(obj);
+            for (T child_obj : composition(obj)) {
+                doc.append(child_obj.getClass().getName(), build_doc(child_obj));
+            }
+        }
+        return doc;
+    }
+
+    protected List<T> composition(T obj){
+        Class obj_class = obj.getClass();
+        Field[] fields = obj_class.getDeclaredFields();
+        List<T> objects = new ArrayList();
+        for (Field f : fields) {
+            try {
+                if (Document.class.isAssignableFrom(f.getType())){
+                    boolean accessible = f.isAccessible();
+                    if (!accessible)
+                    {		
+                        f.setAccessible(true);
+                    }
+                    objects.add((T) f.get(obj));
+ 		    f.setAccessible(accessible);
+                } else if (f.getGenericType() instanceof ParameterizedType) { // se for uma collection
+		    ParameterizedType pt = (ParameterizedType) f.getGenericType(); // descobre o tipo parametrizado (Collection<PALESTRA>)
+		    Type[] types = pt.getActualTypeArguments();
+		    for (Type tp: types) {
+		        Class<?> clzz = (Class<?>) tp;
+		        if (database.Document.class.isAssignableFrom(clzz)) { // verifica se o obj eh do tipo Document
+		            boolean accessible = f.isAccessible();
+		            if (!accessible)
+		                f.setAccessible(true);
+		            try {
+		                objects.add((T) f.get(obj)); // tenta inserir o objeto dentro do outro (no caso isso aqui é o obj que a funcao vai retornar (f.get(t)), porque isso vai ser feito na build_obj acho eu)
+		            } 
+		            catch (ClassCastException ex) {
+		                for (Document d : (Collection<Document>) f.get(obj))
+		                    objects.add((T) d);
+		            }
+		            f.setAccessible(accessible); 
+		        }
+		    }
+                }
+            } catch (IllegalArgumentException | IllegalAccessException ex) {
+                Logger.getLogger(AbstractDAO.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        return objects;
     }
     
 }

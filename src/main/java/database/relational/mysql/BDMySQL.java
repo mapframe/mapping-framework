@@ -7,7 +7,6 @@ package database.relational.mysql;
 
 /**
  *
- * @author rhau
  */
 public class BDMySQL {
     

@@ -9,7 +9,6 @@ import org.bson.Document;
 
 /**
  *
- * @author rhau
  */
 public abstract class Conversor<T> {
     

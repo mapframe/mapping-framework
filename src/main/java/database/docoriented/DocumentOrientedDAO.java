@@ -17,7 +17,6 @@ import java.util.Iterator;
 
 /**
  *
- * @author rhau
  * @param <T>
  */
 public abstract class DocumentOrientedDAO<T extends database.Document> extends AbstractDAO<T> {
@@ -71,12 +70,7 @@ public abstract class DocumentOrientedDAO<T extends database.Document> extends A
         return new Document("docs", documents);
     }
     
-    protected abstract String getDocumentId(T t);
-    
-    /* protected abstract Document prepararDocumento(T t);
-
-    protected abstract T prepararRegistro(Document doc); */
-    
+    protected abstract String getDocumentId(T t);   
     protected Iterator docIterator;
     protected Iterator lastSubDoc;
     protected String lastObjectName;

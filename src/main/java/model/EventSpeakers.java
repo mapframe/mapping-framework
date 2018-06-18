@@ -11,7 +11,6 @@ import java.util.Collection;
 
 /**
  *
- * @author isabella
  */
 public class EventSpeakers extends Document {
     

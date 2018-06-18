@@ -14,7 +14,6 @@ import org.bson.Document;
 
 /**
  *
- * @author isabella
  */
 public class EventSpeakersDocOrientedDAO extends DocumentOrientedDAO<EventSpeakers> {
   

@@ -11,7 +11,6 @@ import org.bson.Document;
 
 /**
  *
- * @author rhau
  */
 
 public class SpeakerDocOrientedDAO extends DocumentOrientedDAO<Speaker> {

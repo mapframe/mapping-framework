@@ -9,7 +9,6 @@ import database.Document;
 
 /**
  *
- * @author rhau
  */
 public class Speaker extends Document {
 

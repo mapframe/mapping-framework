@@ -12,7 +12,6 @@ import java.util.Objects;
 
 /**
  *
- * @author rhau
  */
 public class Comparador {
     

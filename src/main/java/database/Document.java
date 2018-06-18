@@ -7,7 +7,6 @@ package database;
 
 /**
  *
- * @author isabella
  */
 public class Document {
     

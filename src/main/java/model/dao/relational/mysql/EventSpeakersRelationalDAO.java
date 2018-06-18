@@ -6,6 +6,8 @@
 package model.dao.relational.mysql;
 
 import database.relational.RelationalDAO;
+import java.sql.PreparedStatement;
+import java.sql.SQLException;
 import model.EventSpeakers;
 import model.Lecture;
 import model.Speaker;
@@ -13,14 +15,13 @@ import org.bson.Document;
 
 /**
  *
- * @author isabella
  */
 public class EventSpeakersRelationalDAO extends RelationalDAO<EventSpeakers> {
 
     public EventSpeakersRelationalDAO() {
-        setCreateSql("INSERT INTO evento (nome_evento, descricao_evento, endereco, predio, data_inicio, data_fim) VALUES (?, ?, ?, ?, ?, ?)");
-        setUpdateSql("UPDATE evento SET nome_evento = ?, descricao_evento = ?, endereco = ?, predio = ?, data_inicio = ?, data_fim = ? WHERE id_evento = ?");
-        setDeleteSql("DELETE FROM evento WHERE id_evento = ?;");
+        setCreateSql("INSERT INTO event (event_name) VALUES (?)");
+        setUpdateSql("UPDATE event SET event_name = ? WHERE event_id = ?");
+        setDeleteSql("DELETE FROM event WHERE event_id = ?;");
         setFindSql("SELECT * FROM event NATURAL JOIN lecture NATURAL JOIN speaker where event_id = ?;");
         setFindAllSql("SELECT * FROM event NATURAL JOIN lecture NATURAL JOIN speaker;");
     }
@@ -83,5 +84,22 @@ public class EventSpeakersRelationalDAO extends RelationalDAO<EventSpeakers> {
         
         return sqlAsDoc;
     }
+    
+    @Override
+    protected void fillCreate(PreparedStatement ps, Document parameters) throws SQLException {
+        ps.setString(1, (String) parameters.get("1"));
+    }
+    
+    @Override
+    protected void fillUpdate(PreparedStatement ps, Document parameters) throws SQLException {
+        ps.setString(1, (String) parameters.get("1"));
+        ps.setString(2, (String) parameters.get("2"));
+    }
+
+    @Override
+    protected void fillDelete(PreparedStatement ps, EventSpeakers e) throws SQLException {
+        ps.setString(1, e.getId());
+    }
+    
     
 }

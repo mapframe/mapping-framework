@@ -7,7 +7,6 @@ package database.docoriented.mongodb;
 
 /**
  *
- * @author rhau
  */
 public class BDMongo {
    

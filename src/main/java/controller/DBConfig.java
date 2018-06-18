@@ -11,7 +11,6 @@ import model.dao.relational.mysql.EventSpeakersRelationalDAO;
 
 /**
  *
- * @author rhau
  */
 public class DBConfig {
     

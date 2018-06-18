@@ -18,7 +18,6 @@ import org.bson.Document;
 
 /**
  *
- * @author isabella
  */
 @WebServlet(name = "EventoServlet", urlPatterns = {"/eventoServlet"})
 public class EventoServlet extends HttpServlet {

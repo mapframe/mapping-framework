@@ -13,7 +13,6 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author rhau
  */
 public class DateUtils {
    

@@ -19,7 +19,6 @@ import model.EventSpeakers;
 
 /**
  *
- * @author isabella
  */
 @WebServlet(name = "PalestraServlet", urlPatterns = {"/palestraServlet"})
 public class PalestraServlet extends HttpServlet {

@@ -21,7 +21,6 @@ import org.bson.Document;
 
 /**
  *
- * @author isabella
  * @param <T>
  */
 public abstract class RelationalDAO<T extends database.Document> extends AbstractDAO<T> {
@@ -74,41 +73,19 @@ public abstract class RelationalDAO<T extends database.Document> extends Abstrac
 
     /**
      * @param t
-     * @return id do elemento inserido
      */    
     @Override
     public Integer create(T t) {
-        Connection c = ConexaoMySQL.open();
-        Integer id = null;
-        try {
-            PreparedStatement ps = c.prepareStatement(getCreateSql(), PreparedStatement.RETURN_GENERATED_KEYS);
-            // fillCreate(ps, t);
-            ps.execute();
-            
-            ResultSet rs = ps.getGeneratedKeys();
-            if (rs.next())
-                id = rs.getInt(1); // pk
-            rs.close();
-            ps.close();
-            c.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(RelationalDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return id;
+        Document doc = build_doc(t);
+        process_queries(doc);         
+        return 1; //success
     }
-
+   
+    
     @Override
     public void update(T t) {
-        Connection c = ConexaoMySQL.open();
-        try {
-            PreparedStatement ps = c.prepareStatement(getUpdateSql());
-            // fillUpdate(ps, t);
-            ps.execute();
-            ps.close();
-            c.close();
-        } catch (SQLException ex) {
-            Logger.getLogger(RelationalDAO.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        Document doc = build_doc(t);
+        process_queries(doc); 
     }
 
     @Override
@@ -116,7 +93,7 @@ public abstract class RelationalDAO<T extends database.Document> extends Abstrac
         Connection c = ConexaoMySQL.open();
         try {
             PreparedStatement ps = c.prepareStatement(getDeleteSql());
-            // fillDelete(ps, t);
+            fillDelete(ps, t);
             ps.execute();
             ps.close();
             c.close();
@@ -165,17 +142,36 @@ public abstract class RelationalDAO<T extends database.Document> extends Abstrac
         return doc;
     }
     
-  /*  protected abstract void fillCreate(PreparedStatement ps, T t) throws SQLException;
+    public void process_queries(Document doc){
+        Document parameters = (Document) doc.get("sqlParameters");
+        int number_parameters = 1;
+        String sqlCommand = (String) doc.get("sqlCommand");
+        String querySql = null;
+        if("insert".equals(sqlCommand))
+            querySql = getCreateSql();
+        else if("update".equals(sqlCommand))
+            querySql = getUpdateSql();
 
-    protected abstract void fillUpdate(PreparedStatement ps, T t) throws SQLException;
+        Connection c = ConexaoMySQL.open();
+        try {
+            PreparedStatement ps = c.prepareStatement(querySql, PreparedStatement.RETURN_GENERATED_KEYS);
+             if("insert".equals(sqlCommand))
+                fillCreate(ps, parameters);
+            else if("update".equals(sqlCommand))
+                fillUpdate(ps, parameters);
+            ps.execute();
+            ps.close();
+            c.close();
+        } catch (SQLException ex) {
+            Logger.getLogger(RelationalDAO.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+      
+    protected abstract void fillCreate(PreparedStatement ps, Document parameters) throws SQLException;
+
+    protected abstract void fillUpdate(PreparedStatement ps, Document parameters) throws SQLException;
 
     protected abstract void fillDelete(PreparedStatement ps, T t) throws SQLException;
-
-    protected abstract void fillFind(PreparedStatement ps, T t) throws SQLException;
-
-    protected abstract T fill(ResultSet rs) throws SQLException;
-
-    protected abstract Collection<T> fillList(ResultSet rs) throws SQLException;*/
     
     protected Iterator docIterator;
     protected String lastObjectName;

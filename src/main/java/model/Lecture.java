@@ -10,7 +10,6 @@ import java.util.Date;
 
 /**
  *
- * @author rhau
  */
 public class Lecture extends Document {
 
